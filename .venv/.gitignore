@@ -20,4 +20,4 @@ __pycache__/
 .ipynb_checkpoints/
 data/*
 extension/model/
-.idea/workspace.xml
+.idea/
