@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Service Me</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <h1>Service Me</h1>
+
+  <label for="desc">Short description</label>
+  <textarea id="desc" rows="3" placeholder="What is the issue?" spellcheck="false"></textarea>
+  <button id="clear" type="button" class="link">Clear and start a new ticket</button>
+
+  <label for="eid">Requester EID <span class="hint">(only used to fill the form, never stored)</span></label>
+  <input id="eid" type="text" autocomplete="off" spellcheck="false" maxlength="12">
+
+  <p id="status" class="hint"></p>
+
+  <section id="result" hidden>
+    <div id="verdict" class="verdict"></div>
+    <div id="time" class="small"></div>
+
+    <h2>Ticket type (filled in)</h2>
+    <select id="ticket-type"></select>
+    <div id="type-hint" class="hint"></div>
+
+    <h2>Shown for reference (not filled in)</h2>
+    <div id="info"></div>
+
+    <p id="no-suggest" class="hint" hidden>No suggested wording: too few close past tickets, or no phrasing common enough across them.</p>
+    <div id="suggest-box" hidden>
+      <h2>Suggested wording</h2>
+      <div id="suggest-text" class="quote"></div>
+      <label class="check"><input id="use-suggest" type="checkbox"> Use this wording in the ticket</label>
+    </div>
+
+    <h2>Similar past tickets</h2>
+    <ol id="similar"></ol>
+
+    <button id="fill" type="button">Auto-fill new contact page</button>
+    <p class="hint">Opens the new contact page and fills it in. It never saves or submits.</p>
+  </section>
+
+  <details id="settings">
+    <summary>Settings</summary>
+    <label for="url">New contact page URL</label>
+    <input id="url" type="url" placeholder="https://your-instance.service-now.com/...">
+    <label for="location">Location <span class="hint">(filled on every ticket; leave blank to skip)</span></label>
+    <input id="location" type="text" autocomplete="off">
+    <label for="assignee">Assigned To EID <span class="hint">(your EID, filled on every ticket; leave blank to skip)</span></label>
+    <input id="assignee" type="text" autocomplete="off">
+    <label for="group">Assignment Group <span class="hint">(filled on every ticket; leave blank to skip)</span></label>
+    <input id="group" type="text" autocomplete="off">
+    <button id="save-settings" type="button">Save settings</button>
+    <span id="url-msg" class="hint"></span>
+    <label>Fill not working?</label>
+    <button id="check" type="button">Check the open page</button>
+    <p class="hint">Open the new contact page, click this, and send the text that appears. It lists field names and layout only: no ticket text or field values.</p>
+    <textarea id="report" rows="8" hidden readonly></textarea>
+  </details>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

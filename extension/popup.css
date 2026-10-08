@@ -1,0 +1,18 @@
+body { width: 420px; margin: 0; padding: 12px; font: 13px/1.4 system-ui, sans-serif; color: #1d1d1f; }
+h1 { font-size: 16px; margin: 0 0 8px; }
+h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #555; margin: 12px 0 4px; }
+label { display: block; font-weight: 600; margin: 8px 0 3px; }
+label.check { font-weight: 400; }
+textarea, input[type=text], input[type=url], select { width: 100%; box-sizing: border-box; padding: 5px 6px; font: inherit; }
+button { margin-top: 10px; padding: 7px 12px; font: inherit; cursor: pointer; }
+#fill { width: 100%; background: #bf5700; color: #fff; border: 0; border-radius: 4px; font-weight: 600; }
+#fill:disabled { background: #bbb; cursor: default; }
+.hint { color: #666; font-weight: 400; font-size: 12px; }
+.small { color: #444; margin-top: 2px; }
+.verdict { font-size: 17px; font-weight: 700; }
+.quote { padding: 6px 8px; background: #f3f3f3; border-radius: 4px; }
+.row { display: grid; grid-template-columns: 90px 1fr; gap: 6px; align-items: center; margin-bottom: 4px; }
+ol { margin: 0; padding-left: 18px; }
+li { margin-bottom: 4px; }
+details { margin-top: 12px; }
+button.link { margin: 2px 0 0; padding: 0; background: none; border: 0; color: #0b57d0; font-size: 12px; text-decoration: underline; }

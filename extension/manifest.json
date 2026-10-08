@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Service Me",
+  "version": "0.1.0",
+  "description": "Estimates ticket time, finds similar tickets and pre-fills the new contact form. Never saves or submits.",
+  "action": { "default_popup": "popup.html", "default_title": "Service Me" },
+  "background": { "service_worker": "background.js", "type": "module" },
+  "permissions": ["scripting", "storage"],
+  "host_permissions": ["https://*.service-now.com/*"],
+  "optional_host_permissions": ["https://*/*"]
+}

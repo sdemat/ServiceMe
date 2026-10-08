@@ -30,7 +30,8 @@ More Jupyter testing and config changes yielded interesting results
 
 80% incident accuracy is acceptable; realistically, 90% is impossible with unregulated short descriptions. It is hard to correctly guess based on irregular short description naming without a large language model.
 
-RESULT  TIER  TEST                                         DETAIL
+RESULT | TIER | TEST |                                        DETAIL
+=
 ------------------------------------------------------------------------------------------------------------------------
 PASS    MUST  end to end: what the technician sees         weighted cost 136 vs 161 for the cheaper lazy strategy (need 10% lower); 18 incidents shown AT THE WINDOW, 173 inquiries given a time \
 PASS    MUST  entry: priority                              '4 - Low' is 99%: use a fixed default. Uncommon-value recall 50% (need 50% for a model to help) \
@@ -44,3 +45,7 @@ PASS    NICE  entry: record_source                         top-1 80% (default 50
 FAIL    NICE  suggested description                        46% covered (need 50%), same suggestion for near-identical tickets 94% (need 80%), meaning unchanged 94% (need 90%), PII hits 0 \
 PASS    NICE  time estimate: best case (minilm)            10% best case: ticket took at least that long 82% (need 75%) \
 PASS    NICE  time estimate: best case (tf-idf)            10% best case: ticket took at least that long 78% (need 75%) 
+------
+Next design
+=
+In an attempt to normalize short descriptions and allow for more accurate future data, templates for short descriptions will be built for common issues.

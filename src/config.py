@@ -85,6 +85,7 @@ CLASS_WEIGHT = "balanced"
 REGULARIZATION_C = 1.0
 REGULARIZATION_C_GRID = (0.1, 1.0, 10.0)
 MAX_ITER = 1000
+DEFAULT_SHARE = 0.95  # a field where one value has this share becomes a fixed default (no model)
 
 # --- Evaluation ---
 TOP_K_VALUES = (1, 3)
@@ -93,11 +94,12 @@ SIMILARITY_CUTOFF = 0.4    # time estimate uses every past incident at least thi
 SIMILAR_MIN = 3            # fewer matches than this = not enough to estimate
 SIMILAR_MAX = 50           # at most this many matches are used
 BEST_CASE_QUANTILE = 0.1   # best-case time = this share of the matches finished faster (0 = fastest one)
-SUGGEST_CUTOFF = 0.5        # close matches used for the suggested description
-SUGGEST_MIN = 5             # fewer close matches than this = no suggestion
+SUGGEST_CUTOFF = 0.4        # close matches used for the suggested description
+SUGGEST_MIN = 3             # fewer close matches than this = no suggestion
 SUGGEST_MAX = 30            # at most this many matches are compared
-SUGGEST_WORD_SHARE = 0.25   # every word must appear in this share of the other matches...
+SUGGEST_WORD_SHARE = 0.15   # every word must appear in this share of the other matches...
 SUGGEST_WORD_MIN_COUNT = 2  # ...and in at least this many of them (drops names and one-off details)
+BUCKET_EDGES = (8, 24, 72, 168)  # hours: <8h, 8-24h, 1-3d, 3-7d, 7d+
 SIMILAR_SHOWN = 3      # similar tickets listed
 
 # --- PII patterns (compiled in validate.py) ---
@@ -115,6 +117,7 @@ EXTENSION_SHARED = (
     "SIMILARITY_CUTOFF",
     "SIMILAR_MIN",
     "SIMILAR_MAX",
+    "BUCKET_EDGES",
     "BEST_CASE_QUANTILE",
     "SUGGEST_CUTOFF",
     "SUGGEST_MIN",
@@ -127,6 +130,11 @@ EXTENSION_SHARED = (
     "INQUIRY_CUTOFF",
     "TFIDF_WORD_NGRAMS",
     "TFIDF_CHAR_NGRAMS",
+    "EID_PATTERN",
+    "EMAIL_PATTERN",
+    "PHONE_PATTERN",
+    "ENTRY_FIELDS_STRICT",
+    "ENTRY_FIELDS_SOFT",
 )
 
 
