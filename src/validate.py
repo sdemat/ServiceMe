@@ -1,59 +1,55 @@
+"""Check TEXT_COLUMNS for leftover PII. Run: python src/validate.py (exit 1 on a match)."""
+
 import re
 import sys
+
 import pandas as pd
-from sympy import false
 
 import config
+from load import resolve_ids
 
-MAX_EXAMPLES = 5
+MAX_EXAMPLES = 5  # matches shown per pattern
+
 
 def build_patterns():
+    """Compiled PII regexes from config."""
+    greetings = "|".join(re.escape(p) for p in config.NAME_CONTEXT_PHRASES)
     return {
         "eid": re.compile(config.EID_PATTERN),
         "email": re.compile(config.EMAIL_PATTERN),
         "phone": re.compile(config.PHONE_PATTERN),
+        "name_after_greeting": re.compile(rf"\b(?:{greetings})[,\s]+[A-Z][a-z]+"),
     }
 
-def resolve_ids(df):
-    ids = None
-    for col in config.ID_COLUMN:
-        values = df[col].astype("string").str.strip()
-        values = values.mask(values == "")
-        ids = values if ids is None else ids.combine_first(values)
-    return ids.fillna("(no id)").astype(str)
 
 def main():
     config.check_config()
-
     if not config.DATA_FILE.exists():
-        print (f"ERRPR: data file not found: {config.DATA_FILE}")
+        print(f"ERROR: data file not found: {config.DATA_FILE}")
         return 1
 
-    column = config.TEXT_COLUMN
-    df = pd.read_csv(config.DATA_FILE, usecols=[*config.ID_COLUMN, column])
-    text = df[column].fillna("").astype(str)
+    columns = list(config.TEXT_COLUMNS)
+    df = pd.read_csv(config.DATA_FILE, usecols=[*config.ID_COLUMNS, *columns], dtype=str)
     df[config.TICKET_ID_COLUMN] = resolve_ids(df)
+    print(f"{len(df)} tickets | no ID: {int((df[config.TICKET_ID_COLUMN] == '(no id)').sum())}\n")
 
-    print(f"Checking '{column}' in {len(df)} tickets")
-    no_id = int((df[config.TICKET_ID_COLUMN] == "(no id)").sum())
-    print(f"Tickets with no INC or CTC: {no_id}\n")
+    patterns = build_patterns()
+    found = False
+    for column in columns:
+        text = df[column].fillna("").astype(str)
+        print(f"== {column} == (empty: {int((text.str.strip() == '').sum())})")
+        for label, pattern in patterns.items():
+            hits = text.str.contains(pattern, regex=True)
+            print(f"{label}: {int(hits.sum())}")
+            if hits.any():
+                found = True
+                for idx in df.index[hits][:MAX_EXAMPLES]:  # ID and match only, no full text
+                    print(f"    {df.loc[idx, config.TICKET_ID_COLUMN]}: {pattern.search(text[idx]).group(0)!r}")
+        print()
 
-    empty = int((text.str.strip() == "").sum())
-    print(f"Empty short descriptions: {empty}")
+    print("FAIL: possible PII (may include false positives)." if found else "PASS: no PII patterns found.")
+    return 1 if found else 0
 
-    found_pii = False
-    for label, pattern in build_patterns().items():
-        hits = text.str.contains(pattern, regex=True)
-        count = int(hits.sum())
-        if count:
-            found_pii = True
-            for idx in df.index[hits][:MAX_EXAMPLES]:
-                match = pattern.search(text[idx]).group(0)
-                print(f" {df.loc[idx, config.TICKET_ID_COLUMN]}: {match!r}")
 
-    print()
-    if found_pii:
-        print("FAILED. POSSIBLE PII FOUND")
-        return 1
-    print("PASSED")
-    return 0
+if __name__ == "__main__":
+    sys.exit(main())
