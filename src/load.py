@@ -76,3 +76,15 @@ def load_tickets(path=None, verbose=False):
               f"{int(bad_time.sum())} no start time | kept {int(keep_rows.sum())}")
 
     return out[keep_rows].reset_index(drop=True)
+
+
+def add_types(df):
+    """Add hours, is_inquiry (no INC number, or resolved within INQUIRY_MAX_HOURS), is_incident, typed."""
+    df = df.copy()
+    df["hours"] = (df[config.CLOSED_COLUMN] - df[config.TIME_COLUMN]).dt.total_seconds() / 3600
+    valid = df["hours"].notna() & (df["hours"] >= 0)
+    no_inc = ~df[config.TICKET_ID_COLUMN].str.startswith("INC")
+    df["is_inquiry"] = (valid & (df["hours"] <= config.INQUIRY_MAX_HOURS)) | no_inc
+    df["is_incident"] = valid & ~df["is_inquiry"]
+    df["typed"] = df["is_inquiry"] | df["is_incident"]
+    return df
